@@ -8,6 +8,12 @@
             "type": "shell",
             "command": "cd 1-hello-go; go run .",
             "problemMatcher": []
+        },
+        {
+            "label": "Test greetings go",
+            "type": "shell",
+            "command": "cd 2-greetings; go test",
+            "problemMatcher": []
         }
     ]
 }
