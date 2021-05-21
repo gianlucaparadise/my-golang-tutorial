@@ -2,10 +2,12 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 )
 
@@ -15,7 +17,7 @@ type Page struct {
 }
 
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
-var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+var templates = template.Must(template.ParseFiles("tmpl/edit.html", "tmpl/view.html"))
 
 func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 	m := validPath.FindStringSubmatch(r.URL.Path)
@@ -26,13 +28,21 @@ func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 	return m[2], nil
 }
 
+func getPagePath(title string) string {
+	return fmt.Sprintf("./data/%v.txt", title)
+}
+
 func (p *Page) save() error {
-	filename := p.Title + ".txt"
+	err := os.MkdirAll("data", os.ModePerm)
+	if err != nil {
+		return err
+	}
+	filename := getPagePath(p.Title)
 	return ioutil.WriteFile(filename, p.Body, 0600)
 }
 
 func loadPage(title string) (*Page, error) {
-	filename := title + ".txt"
+	filename := getPagePath(title)
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
