@@ -12,3 +12,22 @@ func WordCount(s string) map[string]int {
 
 	return result
 }
+
+// fibonacci is a function that returns
+// a function that returns an int.
+func Fibonacci() func() int {
+	prev := 0
+	current := 0
+	return func() int {
+
+		if current == 0 && prev == 0 {
+			current = 1
+			return 1
+		}
+
+		result := prev + current
+		prev, current = current, result
+
+		return result
+	}
+}

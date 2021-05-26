@@ -22,3 +22,19 @@ func TestWordCount(t *testing.T) {
 		t.Fatalf(`f("%v") failed`, testString2)
 	}
 }
+
+func TestFibonacciCount(t *testing.T) {
+	f := Fibonacci()
+	fibonacciExpected := [10]int{1, 1, 2, 3, 5, 8, 13, 21, 34, 55}
+
+	for i := 0; i < 10; i++ {
+		actual := f()
+		expected := fibonacciExpected[i]
+
+		t.Logf(`Index: %v Actual = %v - Expected = %v`, i, actual, expected)
+
+		if actual != expected {
+			t.Fatalf(`Values at index "%v" differ. Expected: "%v" - Actual: "%v"`, i, expected, actual)
+		}
+	}
+}
