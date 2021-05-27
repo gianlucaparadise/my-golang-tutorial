@@ -1,6 +1,7 @@
 package exercises
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -35,6 +36,28 @@ func TestFibonacciCount(t *testing.T) {
 
 		if actual != expected {
 			t.Fatalf(`Values at index "%v" differ. Expected: "%v" - Actual: "%v"`, i, expected, actual)
+		}
+	}
+}
+
+func TestStringer(t *testing.T) {
+	hosts := map[string]IPAddr{
+		"loopback":  {127, 0, 0, 1},
+		"googleDNS": {8, 8, 8, 8},
+	}
+
+	hostsExpected := map[string]string{
+		"loopback":  "127.0.0.1",
+		"googleDNS": "8.8.8.8",
+	}
+
+	for name, ip := range hosts {
+		fmt.Printf("%v: %v\n", name, ip)
+		hostActual := fmt.Sprint(ip)
+		hostExpected := hostsExpected[name]
+
+		if hostActual != hostExpected {
+			t.Fatalf(`Values with name "%v" differ. Expected: %v - Actual: %v`, name, hostExpected, hostActual)
 		}
 	}
 }
