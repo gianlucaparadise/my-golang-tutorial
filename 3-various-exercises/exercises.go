@@ -5,6 +5,15 @@ import (
 	"strings"
 )
 
+func Sqrt(x float64) float64 {
+	z := 1.0
+	for i := 0; i < 10; i++ {
+		z -= (z*z - x) / (2 * z)
+		fmt.Printf("Iteration %v, z = %v", i, z)
+	}
+	return z
+}
+
 func WordCount(s string) map[string]int {
 	words := strings.Fields(s)
 	result := make(map[string]int)

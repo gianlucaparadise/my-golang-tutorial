@@ -6,6 +6,15 @@ import (
 	"testing"
 )
 
+func TestSqrt(t *testing.T) {
+	expected := 2.0
+	actual := Sqrt(4)
+
+	if actual != expected {
+		t.Fatalf(`Expected and Actual differ: Expected = %v   Actual = %v`, expected, actual)
+	}
+}
+
 func TestWordCount(t *testing.T) {
 	testString1 := "I ate a donut. Then I ate another donut."
 	expectedResult1 := map[string]int{"I": 2, "Then": 1, "a": 1, "another": 1, "ate": 2, "donut.": 2}
