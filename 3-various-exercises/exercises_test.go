@@ -7,11 +7,18 @@ import (
 )
 
 func TestSqrt(t *testing.T) {
-	expected := 2.0
-	actual := Sqrt(4)
+	const count = 4
+	inputs := [count]float64{4.0, 16.0, 25.0, 121.0}
+	expectedList := [count]float64{2.0, 4.0, 5.0, 11.0}
 
-	if actual != expected {
-		t.Fatalf(`Expected and Actual differ: Expected = %v   Actual = %v`, expected, actual)
+	for i := 0; i < count; i++ {
+		input := inputs[i]
+		actual := Sqrt(input)
+		expected := expectedList[i]
+
+		if actual != expected {
+			t.Fatalf(`Expected and Actual differ: Expected = %v   Actual = %v`, expected, actual)
+		}
 	}
 }
 
