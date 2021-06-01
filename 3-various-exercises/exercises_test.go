@@ -2,6 +2,7 @@ package exercises
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 	"testing"
 )
@@ -17,6 +18,22 @@ func TestSqrt(t *testing.T) {
 		expected := expectedList[i]
 
 		if actual != expected {
+			t.Fatalf(`Expected and Actual differ: Expected = %v   Actual = %v`, expected, actual)
+		}
+	}
+}
+
+func TestSqrtFaster(t *testing.T) {
+	const count = 4
+	inputs := [count]float64{4.0, 16.0, 25.0, 121.0}
+	expectedList := [count]float64{2.0, 4.0, 5.0, 11.0}
+
+	for i := 0; i < count; i++ {
+		input := inputs[i]
+		actual := SqrtFaster(input)
+		expected := expectedList[i]
+
+		if math.Abs(actual-expected) > 0.000001 {
 			t.Fatalf(`Expected and Actual differ: Expected = %v   Actual = %v`, expected, actual)
 		}
 	}

@@ -2,6 +2,7 @@ package exercises
 
 import (
 	"fmt"
+	"math"
 	"strings"
 )
 
@@ -10,6 +11,20 @@ func Sqrt(x float64) float64 {
 	for i := 0; i < 10; i++ {
 		z -= (z*z - x) / (2 * z)
 		fmt.Printf("Iteration %v, z = %v", i, z)
+	}
+	return z
+}
+
+func SqrtFaster(x float64) float64 {
+	z := 1.0
+	for i := 0; i < 10; i++ {
+		newZ := z - (z*z-x)/(2*z)
+		fmt.Printf("Iteration %v, z = %v", i, newZ)
+		if math.Abs(z-newZ) < 0.000001 {
+			break
+		}
+
+		z = newZ
 	}
 	return z
 }
