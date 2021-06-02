@@ -64,3 +64,18 @@ type IPAddr [4]byte
 func (addr IPAddr) String() string {
 	return fmt.Sprintf("%v.%v.%v.%v", addr[0], addr[1], addr[2], addr[3])
 }
+
+type ErrNegativeSqrt float64
+
+func (e ErrNegativeSqrt) Error() string {
+	return fmt.Sprintf("cannot Sqrt negative number: %v", float64(e))
+}
+
+func SqrtWithError(x float64) (float64, error) {
+	if x < 0 {
+		return 0, ErrNegativeSqrt(x)
+	}
+
+	result := Sqrt(x)
+	return result, nil
+}

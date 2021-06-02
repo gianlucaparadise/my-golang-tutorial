@@ -94,3 +94,11 @@ func TestStringer(t *testing.T) {
 		}
 	}
 }
+
+func TestSqrtWithError(t *testing.T) {
+	_, err := SqrtWithError(-2)
+
+	if err == nil {
+		t.Fatalf(`Expected error not returned`)
+	}
+}
