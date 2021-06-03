@@ -2,6 +2,7 @@ package exercises
 
 import (
 	"fmt"
+	"io"
 	"math"
 	"reflect"
 	"testing"
@@ -100,5 +101,35 @@ func TestSqrtWithError(t *testing.T) {
 
 	if err == nil {
 		t.Fatalf(`Expected error not returned`)
+	}
+}
+
+// This function is taken from "golang.org/x/tour/reader" v0.1.0
+func ValidateReader(r io.Reader) error {
+	b := make([]byte, 1024, 2048)
+	i, o := 0, 0
+	for ; i < 1<<20 && o < 1<<20; i++ { // test 1mb
+		n, err := r.Read(b)
+		for i, v := range b[:n] {
+			if v != 'A' {
+				return fmt.Errorf("got byte %x at offset %v, want 'A'\n", v, o+i)
+			}
+		}
+		o += n
+		if err != nil {
+			return fmt.Errorf("read error: %v\n", err)
+		}
+	}
+	if o == 0 {
+		return fmt.Errorf("read zero bytes after %d Read calls\n", i)
+	}
+	return nil
+}
+
+func TestMyReader(t *testing.T) {
+	error := ValidateReader(MyReader{})
+
+	if error != nil {
+		t.Fatal(error)
 	}
 }
