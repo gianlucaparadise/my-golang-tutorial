@@ -5,6 +5,7 @@ import (
 	"io"
 	"math"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -131,5 +132,24 @@ func TestMyReader(t *testing.T) {
 
 	if error != nil {
 		t.Fatal(error)
+	}
+}
+
+func TestRot13Reader(t *testing.T) {
+	s := strings.NewReader("Lbh penpxrq gur pbqr!")
+	r := rot13Reader{s}
+
+	buf := new(strings.Builder)
+	_, err := io.Copy(buf, r)
+
+	if err != nil {
+		t.Fatalf("Error while reading output reader")
+	}
+
+	expected := "You cracked the code!"
+	actual := buf.String()
+
+	if expected != actual {
+		t.Fatalf(`Values differ. Expected: "%v" - Actual: "%v"`, expected, actual)
 	}
 }

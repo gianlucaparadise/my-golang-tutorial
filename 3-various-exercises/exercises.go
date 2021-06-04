@@ -2,6 +2,7 @@ package exercises
 
 import (
 	"fmt"
+	"io"
 	"math"
 	"strings"
 )
@@ -88,4 +89,27 @@ func (r MyReader) Read(b []byte) (int, error) {
 	}
 
 	return len(b), nil
+}
+
+type rot13Reader struct {
+	r io.Reader
+}
+
+func (rot13 rot13Reader) Read(b []byte) (int, error) {
+
+	uppercase := "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLM"
+	lowercase := "abcdefghijklmnopqrstuvwxyzabcdefghijklm"
+
+	n, err := rot13.r.Read(b)
+	if err == nil {
+		for i := 0; i < n; i++ {
+			var letter = b[i]
+			if 'A' <= letter && letter <= 'Z' {
+				b[i] = uppercase[letter-'A'+13]
+			} else if 'a' <= letter && letter <= 'z' {
+				b[i] = lowercase[letter-'a'+13]
+			}
+		}
+	}
+	return n, err
 }
