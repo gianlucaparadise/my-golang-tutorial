@@ -5,6 +5,8 @@ import (
 	"io"
 	"math"
 	"strings"
+
+	"golang.org/x/tour/tree"
 )
 
 func Sqrt(x float64) float64 {
@@ -112,4 +114,28 @@ func (rot13 rot13Reader) Read(b []byte) (int, error) {
 		}
 	}
 	return n, err
+}
+
+// Walk walks the tree t sending all values
+// from the tree to the channel ch.
+func Walk(t *tree.Tree, ch chan int) {
+	if t == nil {
+		return
+	}
+
+	ch <- t.Value
+
+	if t.Left != nil {
+		go Walk(t.Left, ch)
+	}
+
+	if t.Right != nil {
+		go Walk(t.Right, ch)
+	}
+}
+
+func StartWalking(t *tree.Tree, ch chan int) {
+	go Walk(t, ch)
+
+	close(ch)
 }

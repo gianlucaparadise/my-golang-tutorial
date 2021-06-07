@@ -7,6 +7,8 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"golang.org/x/tour/tree"
 )
 
 func TestSqrt(t *testing.T) {
@@ -152,4 +154,19 @@ func TestRot13Reader(t *testing.T) {
 	if expected != actual {
 		t.Fatalf(`Values differ. Expected: "%v" - Actual: "%v"`, expected, actual)
 	}
+}
+
+func TestTreeWalk(t *testing.T) {
+	ch := make(chan int)
+	k := 1
+	len := 10 * k
+	tr := tree.New(k)
+
+	go Walk(tr, ch)
+
+	for i := 0; i < len; i++ {
+		t.Log(<-ch)
+	}
+
+	t.Fatal("This is here to let me see the logs")
 }
