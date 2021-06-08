@@ -123,14 +123,14 @@ func Walk(t *tree.Tree, ch chan int) {
 		return
 	}
 
-	ch <- t.Value
-
 	if t.Left != nil {
-		go Walk(t.Left, ch)
+		Walk(t.Left, ch)
 	}
 
+	ch <- t.Value
+
 	if t.Right != nil {
-		go Walk(t.Right, ch)
+		Walk(t.Right, ch)
 	}
 }
 
