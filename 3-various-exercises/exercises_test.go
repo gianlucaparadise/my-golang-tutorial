@@ -162,11 +162,16 @@ func TestTreeWalk(t *testing.T) {
 	len := 10 * k
 	tr := tree.New(k)
 
+	expectedFull := [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
 	go Walk(tr, ch)
 
 	for i := 0; i < len; i++ {
-		t.Log(<-ch)
-	}
+		actual := <-ch
+		expected := expectedFull[i]
 
-	t.Fatal("This is here to let me see the logs")
+		if actual != expected {
+			t.Fatalf(`Values at index "%v" differ. Expected: "%v" - Actual: "%v"`, i, expected, actual)
+		}
+	}
 }

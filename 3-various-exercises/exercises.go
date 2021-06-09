@@ -133,9 +133,3 @@ func Walk(t *tree.Tree, ch chan int) {
 		Walk(t.Right, ch)
 	}
 }
-
-func StartWalking(t *tree.Tree, ch chan int) {
-	go Walk(t, ch)
-
-	close(ch)
-}
