@@ -175,3 +175,28 @@ func TestTreeWalk(t *testing.T) {
 		}
 	}
 }
+
+func TestTreeSame(t *testing.T) {
+	var k int
+	var tr1 *tree.Tree
+	var tr2 *tree.Tree
+
+	k = 1
+	tr1 = tree.New(k)
+	tr2 = tree.New(k)
+
+	isSame := Same(tr1, tr2)
+
+	if !isSame {
+		t.Fatalf(`The trees are the same and "Same" method should return "true"`)
+	}
+
+	tr1 = tree.New(1)
+	tr2 = tree.New(2)
+
+	isSame2 := Same(tr1, tr2)
+
+	if isSame2 {
+		t.Fatalf(`The trees are not the same and "Same" method should return "false"`)
+	}
+}

@@ -133,3 +133,24 @@ func Walk(t *tree.Tree, ch chan int) {
 		Walk(t.Right, ch)
 	}
 }
+
+func Same(t1, t2 *tree.Tree) bool {
+	ch1 := make(chan int)
+	ch2 := make(chan int)
+	k := 1
+	len := 10 * k
+
+	go Walk(t1, ch1)
+	go Walk(t2, ch2)
+
+	for i := 0; i < len; i++ {
+		n1 := <-ch1
+		n2 := <-ch2
+
+		if n1 != n2 {
+			return false
+		}
+	}
+
+	return true
+}
