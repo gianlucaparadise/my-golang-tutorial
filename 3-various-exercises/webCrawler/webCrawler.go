@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"sync"
-	"time"
 )
 
 type Fetcher interface {
@@ -18,23 +17,18 @@ type SafeFetcher struct {
 	fetched map[string]bool
 }
 
-func (safeFetcher *SafeFetcher) Fetch(fetcher Fetcher, url string) (body string, urls []string, err error) {
+func (safeFetcher *SafeFetcher) SaveUrlIfNeeded(url string) bool {
+	// Checking the map
 	safeFetcher.mu.Lock()
 	defer safeFetcher.mu.Unlock()
 
 	_, isFetched := safeFetcher.fetched[url]
 	if isFetched {
-		// This url has already been processed
-		return "", nil, nil
+		return false // This url has already been processed
 	}
+
 	safeFetcher.fetched[url] = true
-
-	body, urls, err = fetcher.Fetch(url)
-	if err != nil {
-		return "", nil, err
-	}
-
-	return body, urls, err
+	return true
 }
 
 // Crawl uses fetcher to recursively crawl
@@ -44,17 +38,19 @@ func Crawl(url string, depth int, fetcher Fetcher, safeFetcher *SafeFetcher) {
 		return
 	}
 
-	body, urls, err := safeFetcher.Fetch(fetcher, url)
+	needsFetch := safeFetcher.SaveUrlIfNeeded(url)
+	if !needsFetch {
+		return
+	}
+
+	body, urls, err := fetcher.Fetch(url)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	if urls != nil {
-		fmt.Printf("found: %s %q\n", url, body)
-
-		for _, u := range urls {
-			go Crawl(u, depth-1, fetcher, safeFetcher)
-		}
+	fmt.Printf("found: %s %q\n", url, body)
+	for _, u := range urls {
+		Crawl(u, depth-1, fetcher, safeFetcher)
 	}
 	return
 }
@@ -62,7 +58,6 @@ func Crawl(url string, depth int, fetcher Fetcher, safeFetcher *SafeFetcher) {
 func main() {
 	c := SafeFetcher{fetched: make(map[string]bool)}
 	Crawl("https://golang.org/", 4, fetcher, &c)
-	time.Sleep(3 * time.Second)
 }
 
 // fakeFetcher is Fetcher that returns canned results.
